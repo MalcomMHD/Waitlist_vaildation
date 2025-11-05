@@ -5,24 +5,59 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Lock, Zap, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 export const WaitlistForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleOpenConfirm = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
+    // Basic client-side validation
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim().toLowerCase();
+    if (!trimmedName || !trimmedEmail) {
+      toast({
+        title: "Missing details",
+        description: "Please fill in your name and email.",
+        duration: 5000,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!supabase) {
+      toast({
+        title: "Signup service not configured",
+        description:
+          "Set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY in .env.local.",
+        duration: 6000,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setConfirmOpen(true);
+  };
+
+  const performSubmit = async () => {
+    setLoading(true);
     try {
-      // Basic client-side validation
       const trimmedName = name.trim();
       const trimmedEmail = email.trim().toLowerCase();
-      if (!trimmedName || !trimmedEmail) {
-        throw new Error("Please fill in your name and email.");
-      }
 
       // Optional: capture traffic source (path + UTM params)
       const url = new URL(window.location.href);
@@ -35,20 +70,11 @@ export const WaitlistForm = () => {
         .filter(Boolean)
         .join("|");
 
-      // Ensure Supabase is configured
-      if (!supabase) {
-        throw new Error(
-          "Signup service not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY."
-        );
-      }
-
-      // Insert into Supabase
-      const { error } = await supabase
+      const { error } = await supabase!
         .from("waitlist_submissions")
         .insert([{ name: trimmedName, email: trimmedEmail, source }]);
 
       if (error) {
-        // Postgres duplicate error code
         if (error.code === "23505") {
           toast({
             title: "You’re already on the list",
@@ -77,6 +103,7 @@ export const WaitlistForm = () => {
       });
     } finally {
       setLoading(false);
+      setConfirmOpen(false);
     }
   };
 
@@ -116,7 +143,7 @@ export const WaitlistForm = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6 mb-10">
+          <form onSubmit={handleOpenConfirm} className="space-y-6 mb-10">
             <div className="space-y-2">
               <label htmlFor="name" className="text-sm font-medium text-muted-foreground">
                 Full Name
@@ -168,6 +195,24 @@ export const WaitlistForm = () => {
               Instructions sent within 24 hours • No spam • No upsell
             </p>
           </form>
+
+          {/* Confirmation dialog */}
+          <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Confirm your submission</AlertDialogTitle>
+                <AlertDialogDescription>
+                  We will add <span className="font-medium">{email.trim().toLowerCase()}</span> to the waitlist and send audit instructions to your inbox.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={performSubmit} disabled={loading}>
+                  {loading ? "Submitting..." : "Confirm & Submit"}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
 
           {/* Trust badges */}
           <div className="pt-8 border-t border-border/30">
