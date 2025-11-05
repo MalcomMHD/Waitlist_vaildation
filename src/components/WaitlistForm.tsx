@@ -5,59 +5,30 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Lock, Zap, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogFooter,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from "@/components/ui/alert-dialog";
 
 export const WaitlistForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
   const { toast } = useToast();
 
-  const handleOpenConfirm = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Basic client-side validation
-    const trimmedName = name.trim();
-    const trimmedEmail = email.trim().toLowerCase();
-    if (!trimmedName || !trimmedEmail) {
-      toast({
-        title: "Missing details",
-        description: "Please fill in your name and email.",
-        duration: 5000,
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!supabase) {
-      toast({
-        title: "Signup service not configured",
-        description:
-          "Set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY in .env.local.",
-        duration: 6000,
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setConfirmOpen(true);
-  };
-
-  const performSubmit = async () => {
     setLoading(true);
+
     try {
+      // Basic client-side validation
       const trimmedName = name.trim();
       const trimmedEmail = email.trim().toLowerCase();
+      if (!trimmedName || !trimmedEmail) {
+        throw new Error("Please fill in your name and email.");
+      }
+
+      if (!supabase) {
+        throw new Error(
+          "Signup service not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY."
+        );
+      }
 
       // Optional: capture traffic source (path + UTM params)
       const url = new URL(window.location.href);
@@ -70,11 +41,13 @@ export const WaitlistForm = () => {
         .filter(Boolean)
         .join("|");
 
-      const { error } = await supabase!
+      // Insert into Supabase
+      const { error } = await supabase
         .from("waitlist_submissions")
         .insert([{ name: trimmedName, email: trimmedEmail, source }]);
 
       if (error) {
+        // Postgres duplicate error code
         if (error.code === "23505") {
           toast({
             title: "You’re already on the list",
@@ -86,9 +59,9 @@ export const WaitlistForm = () => {
         }
       } else {
         toast({
-          title: "You're on the list! 🎉",
-          description: "Check your email for audit instructions.",
-          duration: 5000,
+          title: "Spot secured 🎉",
+          description: `We’ve added ${trimmedEmail}. Expect audit instructions within 24 hours.`,
+          duration: 6000,
         });
         setName("");
         setEmail("");
@@ -103,7 +76,6 @@ export const WaitlistForm = () => {
       });
     } finally {
       setLoading(false);
-      setConfirmOpen(false);
     }
   };
 
@@ -143,7 +115,7 @@ export const WaitlistForm = () => {
             </p>
           </div>
 
-          <form onSubmit={handleOpenConfirm} className="space-y-6 mb-10">
+          <form onSubmit={handleSubmit} className="space-y-6 mb-10">
             <div className="space-y-2">
               <label htmlFor="name" className="text-sm font-medium text-muted-foreground">
                 Full Name
@@ -196,23 +168,7 @@ export const WaitlistForm = () => {
             </p>
           </form>
 
-          {/* Confirmation dialog */}
-          <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Confirm your submission</AlertDialogTitle>
-                <AlertDialogDescription>
-                  We will add <span className="font-medium">{email.trim().toLowerCase()}</span> to the waitlist and send audit instructions to your inbox.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={performSubmit} disabled={loading}>
-                  {loading ? "Submitting..." : "Confirm & Submit"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          {/* Removed confirmation dialog as requested */}
 
           {/* Trust badges */}
           <div className="pt-8 border-t border-border/30">
