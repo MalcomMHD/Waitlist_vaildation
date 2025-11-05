@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Lock, Zap, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { trackEvent } from "@/lib/analytics";
 
 export const WaitlistForm = () => {
   const [name, setName] = useState("");
@@ -15,6 +16,8 @@ export const WaitlistForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    // GA4: moved to success branch (fire only after successful insert)
 
     try {
       // Basic client-side validation
@@ -65,6 +68,23 @@ export const WaitlistForm = () => {
         });
         setName("");
         setEmail("");
+        // GA4: fire form_submit only after successful Supabase insert
+        try {
+          const w = window as any;
+          if (typeof w.gtag === "function") {
+            w.gtag("event", "form_submit", {
+              event_category: "engagement",
+              event_label: "CRM Validation Form",
+              value: 1,
+            });
+          } else {
+            trackEvent("form_submit", {
+              event_category: "engagement",
+              event_label: "CRM Validation Form",
+              value: 1,
+            });
+          }
+        } catch {}
       }
     } catch (err: any) {
       console.error("Waitlist submit error:", err);
@@ -125,6 +145,7 @@ export const WaitlistForm = () => {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                onFocus={() => trackEvent("form_start", { event_category: "engagement", event_label: "CRM Validation Form" })}
                 placeholder="John Smith"
                 required
                 className="h-14 glass-card border-border/50 focus:border-gold/50 focus:ring-gold/20 text-base rounded-xl"
