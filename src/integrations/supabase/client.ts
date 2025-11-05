@@ -8,7 +8,20 @@ const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
-const hasConfig = Boolean(SUPABASE_URL) && Boolean(SUPABASE_PUBLISHABLE_KEY);
+const isValidUrl =
+  typeof SUPABASE_URL === "string" &&
+  SUPABASE_URL.trim().length > 0 &&
+  SUPABASE_URL.trim() !== "undefined" &&
+  SUPABASE_URL.trim() !== "null" &&
+  /^https?:\/\//.test(SUPABASE_URL);
+
+const isValidKey =
+  typeof SUPABASE_PUBLISHABLE_KEY === "string" &&
+  SUPABASE_PUBLISHABLE_KEY.trim().length > 0 &&
+  SUPABASE_PUBLISHABLE_KEY.trim() !== "undefined" &&
+  SUPABASE_PUBLISHABLE_KEY.trim() !== "null";
+
+const hasConfig = isValidUrl && isValidKey;
 
 export const supabase: ReturnType<typeof createClient<Database>> | null = hasConfig
   ? createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
@@ -21,7 +34,17 @@ export const supabase: ReturnType<typeof createClient<Database>> | null = hasCon
   : null;
 
 if (!hasConfig && import.meta.env.DEV) {
+  const maskedKey = typeof SUPABASE_PUBLISHABLE_KEY === "string"
+    ? SUPABASE_PUBLISHABLE_KEY.slice(0, 6) + "..." + SUPABASE_PUBLISHABLE_KEY.slice(-4)
+    : SUPABASE_PUBLISHABLE_KEY;
   console.warn(
-    '[Supabase] Missing configuration: set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY in your .env.'
+    "[Supabase] Invalid configuration detected. Check your .env.local variables:",
+    {
+      VITE_SUPABASE_URL: SUPABASE_URL,
+      VITE_SUPABASE_PUBLISHABLE_KEY: maskedKey,
+    }
+  );
+  console.warn(
+    "Expected a full https URL for VITE_SUPABASE_URL and a non-empty anon key for VITE_SUPABASE_PUBLISHABLE_KEY."
   );
 }
