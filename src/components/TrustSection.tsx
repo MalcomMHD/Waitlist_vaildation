@@ -1,3 +1,5 @@
+import { Star } from "lucide-react";
+
 export const TrustSection = () => {
   const platforms = [
     { name: "HubSpot", logo: "🔷" },
@@ -7,18 +9,18 @@ export const TrustSection = () => {
   ];
 
   return (
-    <section className="py-16 px-4 bg-secondary/20">
-      <div className="container max-w-6xl mx-auto">
-        {/* Platform logos */}
-        <div className="text-center mb-12">
-          <p className="text-sm text-muted-foreground mb-6">Trusted by teams using</p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+    <section className="py-24 px-4">
+      <div className="container max-w-5xl mx-auto space-y-16">
+        {/* Platforms */}
+        <div className="text-center space-y-8">
+          <p className="text-sm text-muted-foreground/70 uppercase tracking-wider">Works with your CRM</p>
+          <div className="flex flex-wrap justify-center items-center gap-8">
             {platforms.map((platform) => (
               <div 
                 key={platform.name}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gold/30 bg-card/50 transition-all hover:border-gold hover:glow-gold"
+                className="flex items-center gap-3 px-6 py-3 glass-card rounded-xl hover:glass-card-gold transition-all duration-300"
               >
-                <span className="text-2xl">{platform.logo}</span>
+                <span className="text-xl">{platform.logo}</span>
                 <span className="font-medium text-sm">{platform.name}</span>
               </div>
             ))}
@@ -27,26 +29,26 @@ export const TrustSection = () => {
 
         {/* Testimonial */}
         <div className="max-w-3xl mx-auto">
-          <div className="bg-card border border-gold/50 rounded-xl p-8 md:p-10 glow-gold">
-            <div className="flex gap-1 mb-4">
+          <div className="glass-card-gold rounded-2xl p-10 md:p-12 shadow-gold">
+            <div className="flex gap-1 mb-6">
               {[...Array(5)].map((_, i) => (
-                <span key={i} className="text-gold text-xl">★</span>
+                <Star key={i} className="w-5 h-5 fill-gold text-gold" />
               ))}
             </div>
             
-            <blockquote className="text-lg md:text-xl mb-6 leading-relaxed">
+            <blockquote className="text-xl md:text-2xl mb-8 leading-relaxed">
               "We discovered <span className="text-gold font-semibold">3,000 duplicates</span> and{" "}
-              <span className="text-gold font-semibold">15% dead leads</span> in our HubSpot data — 
-              all fixed in <span className="text-gold font-semibold">48 hours</span>. 
+              <span className="text-gold font-semibold">15% dead leads</span> in our HubSpot. 
+              Fixed in <span className="text-gold font-semibold">48 hours</span>. 
               Our sales team finally trusts the CRM again."
             </blockquote>
             
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-gold/20 border-2 border-gold flex items-center justify-center text-xl font-bold">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-gold/30 to-gold/10 flex items-center justify-center text-xl font-bold border border-gold/20">
                 M
               </div>
               <div>
-                <p className="font-semibold">Michael R.</p>
+                <p className="font-semibold text-lg">Michael R.</p>
                 <p className="text-sm text-muted-foreground">Sales Director, Cape Town SaaS</p>
               </div>
             </div>

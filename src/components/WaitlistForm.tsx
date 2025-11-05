@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { Lock, Zap, Check } from "lucide-react";
 
 export const WaitlistForm = () => {
   const [name, setName] = useState("");
@@ -13,12 +14,12 @@ export const WaitlistForm = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate form submission
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     toast({
       title: "You're on the list! 🎉",
-      description: "We'll send audit instructions within 24 hours. Check your email.",
+      description: "Check your email for audit instructions.",
+      duration: 5000,
     });
 
     setName("");
@@ -27,32 +28,35 @@ export const WaitlistForm = () => {
   };
 
   return (
-    <section id="waitlist-form" className="py-20 px-4 bg-gradient-to-b from-background to-secondary/20">
-      <div className="container max-w-2xl mx-auto">
-        <div className="bg-card border-2 border-gold rounded-xl p-8 md:p-12 glow-gold-strong">
-          {/* Progress indicator */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-muted-foreground">Free Audit Availability</span>
-              <span className="text-sm font-semibold text-gold">70% Claimed</span>
+    <section id="waitlist-form" className="py-32 px-4 relative">
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold/5 to-transparent pointer-events-none"></div>
+      
+      <div className="container max-w-2xl mx-auto relative z-10">
+        <div className="glass-card-gold rounded-3xl p-10 md:p-14 shadow-gold-strong">
+          {/* Progress bar */}
+          <div className="mb-10 space-y-3">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">Audit spots remaining</span>
+              <span className="font-semibold text-gold">30% left</span>
             </div>
-            <div className="h-2 bg-secondary rounded-full overflow-hidden">
-              <div className="h-full w-[70%] bg-gold animate-glow-pulse"></div>
+            <div className="h-2.5 bg-secondary/50 rounded-full overflow-hidden backdrop-blur-sm">
+              <div className="h-full w-[70%] bg-gradient-to-r from-gold to-gold-dark rounded-full shadow-gold"></div>
             </div>
           </div>
 
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Get Your <span className="text-gold">Free CRM Audit</span>
+          <div className="text-center mb-10 space-y-4">
+            <h2 className="text-4xl md:text-5xl font-bold">
+              Get Your <span className="text-gradient-gold">Free Audit</span>
             </h2>
-            <p className="text-muted-foreground">
-              Discover exactly how much your dirty data is costing you
+            <p className="text-lg text-muted-foreground">
+              See exactly what your dirty data is costing you
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6 mb-10">
             <div className="space-y-2">
-              <label htmlFor="name" className="text-sm font-medium">
+              <label htmlFor="name" className="text-sm font-medium text-muted-foreground">
                 Full Name
               </label>
               <Input
@@ -62,12 +66,12 @@ export const WaitlistForm = () => {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="John Smith"
                 required
-                className="h-12 border-border focus:border-gold"
+                className="h-14 glass-card border-border/50 focus:border-gold/50 focus:ring-gold/20 text-base rounded-xl"
               />
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
+              <label htmlFor="email" className="text-sm font-medium text-muted-foreground">
                 Work Email
               </label>
               <Input
@@ -77,7 +81,7 @@ export const WaitlistForm = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="john@company.com"
                 required
-                className="h-12 border-border focus:border-gold"
+                className="h-14 glass-card border-border/50 focus:border-gold/50 focus:ring-gold/20 text-base rounded-xl"
               />
             </div>
 
@@ -85,32 +89,30 @@ export const WaitlistForm = () => {
               type="submit"
               size="lg"
               variant="gold"
-              className="w-full text-lg py-6 h-auto"
+              className="w-full text-lg py-7 h-auto shadow-lg mt-8"
               disabled={loading}
             >
-              {loading ? "Reserving Your Spot..." : "Send Me My Free Audit →"}
+              {loading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-accent-foreground/30 border-t-accent-foreground rounded-full animate-spin mr-2"></div>
+                  Securing your spot...
+                </>
+              ) : (
+                "Get My Free Audit →"
+              )}
             </Button>
 
-            <p className="text-center text-xs text-muted-foreground">
-              We'll send audit instructions within 24 hours. No spam. No upsell.
+            <p className="text-center text-xs text-muted-foreground/70">
+              Instructions sent within 24 hours • No spam • No upsell
             </p>
           </form>
 
           {/* Trust badges */}
-          <div className="mt-8 pt-8 border-t border-border">
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <span className="text-gold">🔒</span>
-                <span>POPIA Ready</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-gold">✓</span>
-                <span>GDPR Compliant</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-gold">⚡</span>
-                <span>48h Delivery</span>
-              </div>
+          <div className="pt-8 border-t border-border/30">
+            <div className="flex flex-wrap justify-center gap-8 text-sm">
+              <TrustBadge icon={<Lock className="w-4 h-4" />} text="POPIA Compliant" />
+              <TrustBadge icon={<Check className="w-4 h-4" />} text="GDPR Ready" />
+              <TrustBadge icon={<Zap className="w-4 h-4" />} text="48h Delivery" />
             </div>
           </div>
         </div>
@@ -118,3 +120,10 @@ export const WaitlistForm = () => {
     </section>
   );
 };
+
+const TrustBadge = ({ icon, text }: { icon: React.ReactNode; text: string }) => (
+  <div className="flex items-center gap-2 text-muted-foreground/70">
+    <div className="text-gold/70">{icon}</div>
+    <span>{text}</span>
+  </div>
+);

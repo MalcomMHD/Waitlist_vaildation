@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 export const HeroSection = () => {
   const scrollToForm = () => {
@@ -7,72 +7,69 @@ export const HeroSection = () => {
   };
 
   return (
-    <section className="min-h-[90vh] flex items-center justify-center px-4 py-20 animate-fade-in">
-      <div className="container max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+    <section className="min-h-screen flex items-center justify-center px-4 py-32 relative overflow-hidden">
+      {/* Ambient background glow */}
+      <div className="absolute inset-0 bg-gradient-radial from-gold/5 via-transparent to-transparent opacity-30 blur-3xl"></div>
+      
+      <div className="container max-w-7xl mx-auto relative z-10">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left Column - Copy */}
-          <div className="space-y-8 text-center lg:text-left">
-            <div className="inline-block">
-              <span className="px-4 py-2 rounded-full border border-gold text-gold text-sm font-medium glow-gold">
-                Limited Validation Offer
-              </span>
+          <div className="space-y-10 text-center lg:text-left animate-fade-in">
+            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass-card-gold">
+              <Sparkles className="w-4 h-4 text-gold" />
+              <span className="text-gold text-sm font-medium">Limited Beta Access</span>
             </div>
             
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
-              Your CRM Data Is{" "}
-              <span className="text-gold">Lying to You</span>
-            </h1>
+            <div className="space-y-6">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight">
+                Your CRM Data Is{" "}
+                <span className="text-gradient-gold">Lying to You</span>
+              </h1>
+              
+              <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl leading-relaxed">
+                Uncover hidden duplicates, dead leads, and compliance risks — before they cost you clients.
+              </p>
+            </div>
             
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl">
-              We uncover hidden duplicates, dead leads, and compliance risks — before they cost you clients.
-            </p>
-            
-            <div className="space-y-4">
+            <div className="space-y-5">
               <Button 
                 size="lg" 
                 variant="gold" 
-                className="w-full lg:w-auto text-lg px-8 py-6 h-auto group"
+                className="w-full lg:w-auto text-base px-10 py-7 h-auto group shadow-gold"
                 onClick={scrollToForm}
               >
-                Run My Free CRM Cleanliness Audit
+                Get Your Free CRM Audit
                 <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <p className="text-sm text-muted-foreground">
-                Takes 30 seconds. No credit card required.
+              <p className="text-sm text-muted-foreground/80">
+                30 seconds • No credit card • Results in 24 hours
               </p>
             </div>
           </div>
 
-          {/* Right Column - Visual */}
-          <div className="relative">
-            <div className="relative bg-card border border-border rounded-xl p-8 glow-gold">
-              <div className="absolute -top-4 -right-4 bg-destructive text-destructive-foreground px-4 py-2 rounded-lg font-semibold text-sm animate-glow-pulse">
-                ⚠️ Critical Issues Found
-              </div>
-              
-              <div className="space-y-4">
-                <div className="flex items-center justify-between py-3 border-b border-border">
-                  <span className="text-sm text-muted-foreground">Duplicate Records</span>
-                  <span className="text-xl font-bold text-destructive">3,247</span>
-                </div>
-                <div className="flex items-center justify-between py-3 border-b border-border">
-                  <span className="text-sm text-muted-foreground">Dead Leads</span>
-                  <span className="text-xl font-bold text-destructive">15%</span>
-                </div>
-                <div className="flex items-center justify-between py-3 border-b border-border">
-                  <span className="text-sm text-muted-foreground">Missing Data</span>
-                  <span className="text-xl font-bold text-destructive">2,891</span>
-                </div>
-                <div className="flex items-center justify-between py-3">
-                  <span className="text-sm text-muted-foreground">Compliance Risk</span>
-                  <span className="text-xl font-bold text-destructive">High</span>
+          {/* Right Column - Stats Card */}
+          <div className="relative animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <div className="absolute -inset-4 bg-gradient-to-r from-gold/20 to-destructive/20 rounded-3xl blur-2xl opacity-30"></div>
+            
+            <div className="relative glass-card rounded-2xl p-10 shadow-lg">
+              <div className="absolute -top-5 -right-5 px-5 py-3 bg-gradient-to-br from-destructive to-destructive/80 rounded-xl font-semibold text-sm shadow-lg">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                  Critical Issues Detected
                 </div>
               </div>
               
-              <div className="mt-6 p-4 bg-destructive/10 border border-destructive rounded-lg">
-                <p className="text-sm text-destructive font-medium">
-                  Estimated Revenue Leakage: <span className="text-lg font-bold">R 187,450/year</span>
-                </p>
+              <div className="space-y-6 mt-4">
+                <StatItem label="Duplicate Records" value="3,247" />
+                <StatItem label="Dead Leads" value="15%" />
+                <StatItem label="Missing Data Fields" value="2,891" />
+                <StatItem label="Compliance Risk" value="High" isLast />
+              </div>
+              
+              <div className="mt-8 p-6 glass-card-gold rounded-xl">
+                <p className="text-sm text-muted-foreground mb-2">Estimated Annual Impact</p>
+                <p className="text-3xl font-bold text-gold">R 187,450</p>
+                <p className="text-xs text-muted-foreground mt-1">in lost revenue & inefficiency</p>
               </div>
             </div>
           </div>
@@ -81,3 +78,10 @@ export const HeroSection = () => {
     </section>
   );
 };
+
+const StatItem = ({ label, value, isLast = false }: { label: string; value: string; isLast?: boolean }) => (
+  <div className={`flex items-center justify-between py-4 ${!isLast ? 'border-b border-border/30' : ''}`}>
+    <span className="text-sm text-muted-foreground">{label}</span>
+    <span className="text-2xl font-bold text-destructive">{value}</span>
+  </div>
+);
