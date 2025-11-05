@@ -2,17 +2,21 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+const RAW_SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const RAW_SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+// Trim to tolerate accidental whitespace in .env values
+const SUPABASE_URL = typeof RAW_SUPABASE_URL === 'string' ? RAW_SUPABASE_URL.trim() : RAW_SUPABASE_URL;
+const SUPABASE_PUBLISHABLE_KEY = typeof RAW_SUPABASE_PUBLISHABLE_KEY === 'string' ? RAW_SUPABASE_PUBLISHABLE_KEY.trim() : RAW_SUPABASE_PUBLISHABLE_KEY;
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
 const isValidUrl =
   typeof SUPABASE_URL === "string" &&
-  SUPABASE_URL.trim().length > 0 &&
-  SUPABASE_URL.trim() !== "undefined" &&
-  SUPABASE_URL.trim() !== "null" &&
+  SUPABASE_URL.length > 0 &&
+  SUPABASE_URL !== "undefined" &&
+  SUPABASE_URL !== "null" &&
   /^https?:\/\//.test(SUPABASE_URL);
 
 const isValidKey =
@@ -24,7 +28,7 @@ const isValidKey =
 const hasConfig = isValidUrl && isValidKey;
 
 export const supabase: ReturnType<typeof createClient<Database>> | null = hasConfig
-  ? createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  ? createClient<Database>(SUPABASE_URL as string, SUPABASE_PUBLISHABLE_KEY as string, {
       auth: {
         storage: localStorage,
         persistSession: true,
