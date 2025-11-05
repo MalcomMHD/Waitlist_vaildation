@@ -87,6 +87,15 @@ export const WaitlistForm = () => {
       
       <div className="container max-w-2xl mx-auto relative z-10">
         <div className="glass-card-gold rounded-3xl p-10 md:p-14 shadow-gold-strong">
+          {/* Config warning when Supabase is not set up */}
+          {!supabase && (
+            <div className="mb-8 p-4 rounded-xl border border-destructive/30 bg-destructive/10 text-destructive">
+              <p className="font-semibold mb-1">Signup service not configured</p>
+              <p className="text-sm text-muted-foreground">
+                Set <code className="font-mono">VITE_SUPABASE_URL</code> and <code className="font-mono">VITE_SUPABASE_PUBLISHABLE_KEY</code> in a <code className="font-mono">.env.local</code> file to enable submissions.
+              </p>
+            </div>
+          )}
           {/* Progress bar */}
           <div className="mb-10 space-y-3">
             <div className="flex items-center justify-between text-sm">
@@ -143,7 +152,7 @@ export const WaitlistForm = () => {
               size="lg"
               variant="gold"
               className="w-full text-lg py-7 h-auto shadow-lg mt-8"
-              disabled={loading}
+              disabled={loading || !supabase}
             >
               {loading ? (
                 <>
@@ -151,7 +160,7 @@ export const WaitlistForm = () => {
                   Securing your spot...
                 </>
               ) : (
-                "Get My Free Audit →"
+                !supabase ? "Configure Supabase to enable signup" : "Get My Free Audit →"
               )}
             </Button>
 
