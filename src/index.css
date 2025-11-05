@@ -97,4 +97,26 @@ All colors MUST be HSL.
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+
+  /* Logo carousel utilities */
+  .logo-marquee {
+    --marquee-duration: 28s;
+  }
+  .logo-track {
+    width: max-content;
+    animation: marquee var(--marquee-duration) linear infinite;
+  }
+  .logo-track:hover {
+    animation-play-state: paused;
+  }
+}
+
+/* Keyframes for the logo marquee */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }

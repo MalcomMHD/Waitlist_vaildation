@@ -29,7 +29,7 @@ export const FooterSection = () => {
         </div>
 
         <div className="pt-12 text-center text-sm text-muted-foreground/50">
-          <p>© 2025 CRM Clean Sprint. All rights reserved.</p>
+          <p>© 2025 Closed Analytics All rights reserved.</p>
         </div>
       </div>
     </footer>

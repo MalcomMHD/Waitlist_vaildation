@@ -1,8 +1,10 @@
+// At top-level imports of WaitlistForm component
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Lock, Zap, Check } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const WaitlistForm = () => {
   const [name, setName] = useState("");
@@ -14,17 +16,61 @@ export const WaitlistForm = () => {
     e.preventDefault();
     setLoading(true);
 
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      // Basic client-side validation
+      const trimmedName = name.trim();
+      const trimmedEmail = email.trim().toLowerCase();
+      if (!trimmedName || !trimmedEmail) {
+        throw new Error("Please fill in your name and email.");
+      }
 
-    toast({
-      title: "You're on the list! 🎉",
-      description: "Check your email for audit instructions.",
-      duration: 5000,
-    });
+      // Optional: capture traffic source (path + UTM params)
+      const url = new URL(window.location.href);
+      const source = [
+        window.location.pathname,
+        url.searchParams.get("utm_source"),
+        url.searchParams.get("utm_medium"),
+        url.searchParams.get("utm_campaign"),
+      ]
+        .filter(Boolean)
+        .join("|");
 
-    setName("");
-    setEmail("");
-    setLoading(false);
+      // Insert into Supabase
+      const { error } = await (supabase as any)
+        .from("waitlist_submissions")
+        .insert([{ name: trimmedName, email: trimmedEmail, source }]);
+
+      if (error) {
+        // Postgres duplicate error code
+        if (error.code === "23505") {
+          toast({
+            title: "You’re already on the list",
+            description: "We’ll send audit instructions shortly.",
+            duration: 5000,
+          });
+        } else {
+          throw error;
+        }
+      } else {
+        toast({
+          title: "You're on the list! 🎉",
+          description: "Check your email for audit instructions.",
+          duration: 5000,
+        });
+        setName("");
+        setEmail("");
+      }
+    } catch (err: any) {
+      console.error("Waitlist submit error:", err);
+      toast({
+        title: "Something went wrong",
+        description: err?.message ?? "Please try again or contact support.",
+        duration: 6000,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

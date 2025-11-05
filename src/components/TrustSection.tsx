@@ -1,4 +1,5 @@
 import { Star } from "lucide-react";
+import { LogoCarousel } from "./LogoCarousel";
 
 export const TrustSection = () => {
   const platforms = [
@@ -11,20 +12,10 @@ export const TrustSection = () => {
   return (
     <section className="py-24 px-4">
       <div className="container max-w-5xl mx-auto space-y-16">
-        {/* Platforms */}
+        {/* Platforms - moving carousel */}
         <div className="text-center space-y-8">
           <p className="text-sm text-muted-foreground/70 uppercase tracking-wider">Works with your CRM</p>
-          <div className="flex flex-wrap justify-center items-center gap-8">
-            {platforms.map((platform) => (
-              <div 
-                key={platform.name}
-                className="flex items-center gap-3 px-6 py-3 glass-card rounded-xl hover:glass-card-gold transition-all duration-300"
-              >
-                <span className="text-xl">{platform.logo}</span>
-                <span className="font-medium text-sm">{platform.name}</span>
-              </div>
-            ))}
-          </div>
+          <LogoCarousel />
         </div>
 
         {/* Testimonial */}
