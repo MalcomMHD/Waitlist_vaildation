@@ -35,8 +35,15 @@ export const WaitlistForm = () => {
         .filter(Boolean)
         .join("|");
 
+      // Ensure Supabase is configured
+      if (!supabase) {
+        throw new Error(
+          "Signup service not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY."
+        );
+      }
+
       // Insert into Supabase
-      const { error } = await (supabase as any)
+      const { error } = await supabase
         .from("waitlist_submissions")
         .insert([{ name: trimmedName, email: trimmedEmail, source }]);
 
