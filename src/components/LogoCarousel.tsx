@@ -13,10 +13,10 @@ export const LogoCarousel = () => {
   const loopLogos = [...logos, ...logos];
 
   return (
-    <div className="logo-marquee relative overflow-hidden">
+    <div className="logo-marquee relative overflow-hidden bg-white">
       {/* Fade edges */}
-      <div className="pointer-events-none absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-background to-transparent"></div>
-      <div className="pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-background to-transparent"></div>
+      <div className="pointer-events-none absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-white to-transparent"></div>
+      <div className="pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-white to-transparent"></div>
 
       <div className="logo-track flex items-center gap-10">
         {loopLogos.map((logo, i) => (
@@ -24,7 +24,7 @@ export const LogoCarousel = () => {
             <img
               src={logo.src}
               alt={logo.alt}
-              className="h-10 w-auto opacity-80 hover:opacity-100 transition-opacity"
+              className="h-10 w-auto opacity-80 hover:opacity-100 transition-opacity filter grayscale"
               loading="lazy"
             />
           </div>

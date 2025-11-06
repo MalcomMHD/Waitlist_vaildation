@@ -7,7 +7,11 @@ import { Lock, Zap, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { trackEvent } from "@/lib/analytics";
 
-export const WaitlistForm = () => {
+type WaitlistFormProps = {
+  variant?: "inline" | "section";
+};
+
+export const WaitlistForm = ({ variant = "section" }: WaitlistFormProps) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -98,6 +102,60 @@ export const WaitlistForm = () => {
       setLoading(false);
     }
   };
+
+  if (variant === "inline") {
+    return (
+      <div id="waitlist-form" className="rounded-2xl border border-neutral-200 bg-white p-8 shadow-sm">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <label htmlFor="name" className="text-sm font-medium text-neutral-600">
+              Full Name
+            </label>
+            <Input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onFocus={() => trackEvent("form_start", { event_category: "engagement", event_label: "CRM Validation Form" })}
+              placeholder="John Smith"
+              required
+              className="h-12 border-neutral-300 focus:border-blue-600 focus:ring-blue-200 text-base"
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="email" className="text-sm font-medium text-neutral-600">
+              Work Email
+            </label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="john@company.com"
+              required
+              className="h-12 border-neutral-300 focus:border-blue-600 focus:ring-blue-200 text-base"
+            />
+          </div>
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white text-base py-6 h-auto"
+            disabled={loading || !supabase}
+          >
+            {loading ? (
+              <>
+                <div className="w-5 h-5 border-2 border-neutral-300 border-t-white rounded-full animate-spin mr-2"></div>
+                Joining...
+              </>
+            ) : (
+              !supabase ? "Configure Supabase to enable signup" : "Join the Waitlist →"
+            )}
+          </Button>
+          <p className="text-center text-xs text-neutral-500">No spam • Audit instructions follow within 24 hours</p>
+        </form>
+      </div>
+    );
+  }
 
   return (
     <section id="waitlist-form" className="py-32 px-4 relative">
