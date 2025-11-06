@@ -123,7 +123,7 @@ export const WaitlistForm = ({ variant = "section" }: WaitlistFormProps) => {
               onFocus={() => trackEvent("form_start", { event_category: "engagement", event_label: "CRM Validation Form" })}
               placeholder="John Smith"
               required
-              className="h-12 border-neutral-300 focus:border-blue-600 focus:ring-blue-200 text-base"
+              className="h-12 bg-neutral-100 border-neutral-400 text-black focus:border-blue-600 focus:ring-blue-200 text-base"
             />
           </div>
           <div className="space-y-2">
@@ -137,7 +137,7 @@ export const WaitlistForm = ({ variant = "section" }: WaitlistFormProps) => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="john@company.com"
               required
-              className="h-12 border-neutral-300 focus:border-blue-600 focus:ring-blue-200 text-base"
+              className="h-12 bg-neutral-100 border-neutral-400 text-black focus:border-blue-600 focus:ring-blue-200 text-base"
             />
           </div>
           <Button
@@ -210,7 +210,7 @@ export const WaitlistForm = ({ variant = "section" }: WaitlistFormProps) => {
                 onFocus={() => trackEvent("form_start", { event_category: "engagement", event_label: "CRM Validation Form" })}
                 placeholder="John Smith"
                 required
-                className="h-14 glass-card border-border/50 focus:border-gold/50 focus:ring-gold/20 text-base rounded-xl"
+                className="h-14 bg-neutral-100 border-neutral-400 text-black focus:border-blue-600 focus:ring-blue-200 text-base rounded-xl"
               />
             </div>
 
@@ -225,7 +225,7 @@ export const WaitlistForm = ({ variant = "section" }: WaitlistFormProps) => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="john@company.com"
                 required
-                className="h-14 glass-card border-border/50 focus:border-gold/50 focus:ring-gold/20 text-base rounded-xl"
+                className="h-14 bg-neutral-100 border-neutral-400 text-black focus:border-blue-600 focus:ring-blue-200 text-base rounded-xl"
               />
             </div>
 
