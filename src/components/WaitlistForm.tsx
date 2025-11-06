@@ -144,7 +144,7 @@ export const WaitlistForm = ({ variant = "section" }: WaitlistFormProps) => {
             type="submit"
             size="lg"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white text-base py-6 h-auto"
-            disabled={loading || !supabase}
+            disabled={loading}
           >
             {loading ? (
               <>
@@ -152,7 +152,7 @@ export const WaitlistForm = ({ variant = "section" }: WaitlistFormProps) => {
                 Joining...
               </>
             ) : (
-              !supabase ? "Configure Supabase to enable signup" : "Join the Waitlist →"
+              "Join the Waitlist →"
             )}
           </Button>
           <p className="text-center text-xs text-neutral-500">No spam • Audit instructions follow within 24 hours</p>
@@ -168,8 +168,8 @@ export const WaitlistForm = ({ variant = "section" }: WaitlistFormProps) => {
       
       <div className="container max-w-2xl mx-auto relative z-10">
         <div className="glass-card-gold rounded-3xl p-10 md:p-14 shadow-gold-strong">
-          {/* Config warning when Supabase is not set up */}
-          {!supabase && (
+          {/* Config warning shown only in development when Supabase is not set up */}
+          {import.meta.env.DEV && !supabase && (
             <div className="mb-8 p-4 rounded-xl border border-destructive/30 bg-destructive/10 text-destructive">
               <p className="font-semibold mb-1">Signup service not configured</p>
               <p className="text-sm text-muted-foreground">
@@ -234,7 +234,7 @@ export const WaitlistForm = ({ variant = "section" }: WaitlistFormProps) => {
               size="lg"
               variant="gold"
               className="w-full text-lg py-7 h-auto shadow-lg mt-8"
-              disabled={loading || !supabase}
+              disabled={loading}
             >
               {loading ? (
                 <>
@@ -242,7 +242,7 @@ export const WaitlistForm = ({ variant = "section" }: WaitlistFormProps) => {
                   Securing your spot...
                 </>
               ) : (
-                !supabase ? "Configure Supabase to enable signup" : "Get My Free Audit →"
+                "Get My Free Audit →"
               )}
             </Button>
 
